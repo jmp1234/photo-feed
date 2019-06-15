@@ -8,8 +8,8 @@ import Profile from './app/screens/profile'
 const MainStack = createBottomTabNavigator(
   {
     Feed: { screen: Feed},
-    Upload: { screen: Feed},
-    Profile: { screen: Feed}
+    Upload: { screen: Upload},
+    Profile: { screen: Profile}
   }
 )
 
