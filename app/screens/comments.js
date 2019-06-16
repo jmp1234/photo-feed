@@ -32,12 +32,12 @@ class Upload extends React.Component {
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         {this.state.loggedin ? (
           //are logged in
-          <Text>Upload!!!</Text>
+          <Text>Comments</Text>
         ) : (
           //not logged in
           <View>
             <Text style={{textAlign: 'center'}}>You are not logged in</Text>
-            <Text>Please login to upload a photo</Text>
+            <Text>Please login to post a comment</Text>
           </View>
         )}
       </View>

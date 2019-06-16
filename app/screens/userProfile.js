@@ -80,7 +80,7 @@ class Profile extends React.Component {
               <Image source={{uri: this.state.avatar}} style={{marginLeft: 10, width: 100, height: 100, borderRadius: 50}} />
               <View style={{marginRight: 10}}>
                 <Text>{this.state.name}</Text>
-                <Text>@{this.state.username}</Text>
+                <Text>{this.state.username}</Text>
               </View>
             </View>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightgreen'}}>
