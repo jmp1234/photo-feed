@@ -70,7 +70,7 @@ class Feed extends React.Component {
           var photoObj = data[photo];
           console.log('photoObj: ',photoObj);
           console.log('users: ', database.ref('users').child(photoObj.author))
-            database.ref('users').child(photoObj.author).once('value').then((snapshot) => {
+            database.ref('users').child(photoObj.author).child('username').once('value').then((snapshot) => {
               const exists = (snapshot.val() !== null);
               if(exists) data = snapshot.val();
                 photo_feed.push({
@@ -78,7 +78,7 @@ class Feed extends React.Component {
                   url: photoObj.url,
                   caption: photoObj.caption,
                   posted: that.timeConverter(photoObj.posted),
-                  author: data.username
+                  author: data
                 });
                 console.log('photo feed:', photo_feed)
                 that.setState({
