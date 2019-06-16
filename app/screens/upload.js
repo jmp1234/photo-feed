@@ -1,13 +1,16 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View, Image } from 'react-native';
+import { TouchableOpacity, FlatList, StyleSheet, Text, View, Image } from 'react-native';
 import { f, auth, database, storage } from '../../config/config';
+import { Permissions, ImagePicker } from 'expo';
 
 class Upload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loggedin: false,
+      imageId: this.uniqueId()
     }
+    alert(this.uniqueId())
   }
 
   componentDidMount() {
@@ -27,16 +30,68 @@ class Upload extends React.Component {
     })
   }
 
+  checkPermissions = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({
+      camera: status
+    })
+    const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    this.setState({
+      cameraRoll: statusRoll
+    })
+  }
+
+  s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+  }
+
+  uniqueId = () => {
+    return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' +
+    this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4();
+  }
+
+  findNewImage = async () => {
+    this.checkPermissions();
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'Images',
+      allowsEditing: true,
+      quality: 1
+    });
+
+    console.log('result: ', result);
+
+    if(!result.cancelled) {
+      console.log('upload image');
+      this.uploadImage(result.uri);
+    } else {
+      console.log('cancelled')
+    }
+  }
+
+  uploadImage = async (uri) => {
+    console.log('uri: ', uri)
+  }
+
   render () {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1}}>
         {this.state.loggedin ? (
           //are logged in
-          <Text>Upload!!!</Text>
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: 28, paddingBottom: 15}}>Upload!!!</Text>
+            <TouchableOpacity
+            onPress={() => this.findNewImage()}
+            style={{paddingVertical: 10, paddingHorizontal: 20, backgroundColor: 'blue', borderRadius: 5}}>
+              <Text style={{color: 'white'}}>Select Photo</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           //not logged in
-          <View>
-            <Text style={{textAlign: 'center'}}>You are not logged in</Text>
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>You are not logged in</Text>
             <Text>Please login to upload a photo</Text>
           </View>
         )}
