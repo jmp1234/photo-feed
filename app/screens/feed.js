@@ -35,8 +35,8 @@ class Feed extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           style={{flex:1, backgroundColor:'#eee'}}
           renderItem={({item, index}) => (
-            <View key={index}>
-              <View>
+            <View key={index} style={{width: '100%', overflow:'hidden', marginBottom: 5, justifyContent: 'space-between', borderBottomWidth:1, borderColor: 'grey'}}>
+              <View style={{padding:5, width:'100%', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text>Time Ago</Text>
                 <Text>@Johnny</Text>
               </View>
@@ -46,9 +46,9 @@ class Feed extends React.Component {
                   style={{resizeMode: 'cover', width: '100%', height: 275}}
                 />
               </View>
-            <View>
+            <View style={{padding:5}}>
               <Text>Caption text here...</Text>
-              <Text>View Comments...</Text>
+              <Text style={{marginTop: 10, textAlign:'center'}}>View Comments...</Text>
             </View>
           </View>
         )}
