@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import Feed from './app/screens/feed';
 import Upload from './app/screens/upload';
-import Profile from './app/screens/profile'
+import Profile from './app/screens/profile';
+import { f, auth, database, storage } from './config/config';
 
 const MainStack = createBottomTabNavigator(
   {
@@ -15,6 +16,20 @@ const MainStack = createBottomTabNavigator(
 
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.login();
+  }
+
+  login = async () => {
+    //force user to loggedin
+    try {
+      let user = await auth.signInWithEmailAndPassword('test@user.com', 'password');
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
   render() {
     return (
       <MainStack />
