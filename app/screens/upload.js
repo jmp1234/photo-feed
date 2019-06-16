@@ -52,7 +52,7 @@ class Upload extends React.Component {
     this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4();
   }
 
-  findNewImage = async () => {
+  findNewImage = async (uri) => {
     this.checkPermissions();
 
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,6 +73,25 @@ class Upload extends React.Component {
 
   uploadImage = async (uri) => {
     console.log('uri: ', uri)
+    var that = this;
+    var userid = f.auth().currentUser.uid;
+    var imageId = this.state.imageId;
+
+    var re = /(?:\.([^.]+))?$/;
+    var ext = re.exec(uri)[1];
+    this.setState({
+      currentFileType: ext
+    })
+
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    var FilePath = imageId + '.' + that.state.currentFileType;
+
+    const ref = storage.ref('user/' + userid + '/img').child(FilePath);
+
+    var snapshot = ref.put(blob).on('state_changed', snapshot => {
+      console.log('progress ', snapshot.bytesTransferred, snapshot.totalBytes)
+    })
   }
 
   render () {
