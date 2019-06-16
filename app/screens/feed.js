@@ -1,24 +1,63 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, Image } from 'react-native';
+import { f, auth, database, storage } from '../../config/config';
 
 class Feed extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      photo_feed: [0,1,2,3,4],
+      photo_feed: [],
       refresh: false,
+      loading: true
     }
   }
 
-  loadNew = () => {
+  componentDidMount = () => {
+
+    //Load Feed
+    this.loadFeed();
+  }
+
+  loadFeed = () => {
     this.setState({
-      refresh: true
-    });
-    this.setState({
-      photo_feed: [5,6,7,8,9],
-      refresh: false
+      refresh: true,
+      photo_feed: []
     })
+
+    let that = this;
+    database.ref('photos').orderByChild('posted').once('value').then((snapshot) => {
+      const exists = (snapshot.val() !== null);
+      if(exists) data = snapshot.val();
+        var photo_feed = that.state.photo_feed;
+        //for every photo in the photo object in database:
+        for(let photo in data) {
+          var photoObj = data[photo];
+          console.log('photoObj: ',photoObj);
+          console.log('users: ', database.ref('users').child(photoObj.author))
+            database.ref('users').child(photoObj.author).once('value').then((snapshot) => {
+              const exists = (snapshot.val() !== null);
+              if(exists) data = snapshot.val();
+                photo_feed.push({
+                  id: photo,
+                  url: photoObj.url,
+                  caption: photoObj.caption,
+                  posted: photoObj.posted,
+                  author: data.username
+                });
+
+                that.setState({
+                  refresh: false,
+                  loading: false
+                });
+            }).catch(error => console.log(error));
+        }
+    }).catch(error => console.log(error));
+  }
+
+  loadNew = () => {
+    //Load Feed
+    this.loadFeed();
   }
 
   render () {
