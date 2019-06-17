@@ -11,7 +11,8 @@ class Upload extends React.Component {
       imageId: this.uniqueId(),
       imageSelected: false,
       uploading: false,
-      caption: ''
+      caption: '',
+      progress: 0
     }
     alert(this.uniqueId())
   }
@@ -82,6 +83,15 @@ class Upload extends React.Component {
     }
   }
 
+  uploadPublish = () => {
+    if(this.state.caption != '') {
+      //
+      this.uploadImage(this.state.uri)
+    } else {
+      alert('please enter a caption..')
+    }
+  }
+
   uploadImage = async (uri) => {
     console.log('uri: ', uri)
     var that = this;
@@ -91,18 +101,38 @@ class Upload extends React.Component {
     var re = /(?:\.([^.]+))?$/;
     var ext = re.exec(uri)[1];
     this.setState({
-      currentFileType: ext
+      currentFileType: ext,
+      uploading: true
     })
 
     const response = await fetch(uri);
     const blob = await response.blob();
     var FilePath = imageId + '.' + that.state.currentFileType;
 
-    const ref = storage.ref('user/' + userid + '/img').child(FilePath);
+    var uploadTask = storage.ref('user/' + userid + '/img').child(FilePath).put(blob);
 
-    var snapshot = ref.put(blob).on('state_changed', snapshot => {
-      console.log('progress ', snapshot.bytesTransferred, snapshot.totalBytes)
+    uploadTask.on('state_changed', function(snapshot) {
+      var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
+      console.log('upload is '+ progress+ '% complete');
+      that.setState({
+        progress: progress
+      })
+    }, function(error) {
+      console.log('error with upload: ', error)
+    }, function() {
+      //upload is complete
+      that.setState({
+        progress: 100,
+      })
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        console.log(downloadURL)
+        alert(downloadURL)
+      })
     })
+
+    // var snapshot = ref.put(blob).on('state_changed', snapshot => {
+    //   console.log('progress ', snapshot.bytesTransferred, snapshot.totalBytes)
+    // })
   }
 
   render () {
@@ -127,6 +157,29 @@ class Upload extends React.Component {
                     onChangeText={(text) => this.setState({caption: text})}
                     style={{marginVertical:10, height:100, padding:5, borderColor:'grey', borderWidth:1, borderRadius: 3, backgroundColor: 'white', color: 'black'}}
                   />
+                  <TouchableOpacity
+                  onPress={() => this.uploadPublish()}
+                  style={{alignSelf:'center', width:170, marginHorizontal:'auto', backgroundColor:'purple', borderRadius:5, paddingVertical:10, paddingHorizontal:20}}>
+                    <Text style={{textAlign:'center', color:'white'}}>Upload & Publish</Text>
+                  </TouchableOpacity>
+                  {this.state.uploading ? (
+                    <View style={{marginTop:10}}>
+                      <Text>{this.state.progress}%</Text>
+                      {this.state.progress != 100 ? (
+                        <ActivityIndicator size="small" color="blue"/>
+                      ) : (
+                        <Text>Processing</Text>
+                      )}
+                    </View>
+                  ) : (
+                    <View></View>
+                  )}
+
+                  <Image
+                  source={{uri: this.state.uri}}
+                  style={{marginTop:10, resizeMode:'cover', width:'100%', height:275}}
+                  />
+
                 </View>
               </View>
             ) : (
