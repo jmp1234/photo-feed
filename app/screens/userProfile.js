@@ -16,9 +16,9 @@ class Profile extends React.Component {
   }
 
   checkParams = () => {
-    //
     var params = this.props.navigation.state.params;
-    console.log(this.props.navigation)
+    console.log('navigation: ',this.props.navigation)
+    console.log('params: ', params)
     if(params) {
       if(params.userId) {
         this.setState({
@@ -84,6 +84,7 @@ class Profile extends React.Component {
                 <Text>{this.state.username}</Text>
               </View>
             </View>
+
             <PhotoList isUser={true} userId={this.state.userId} navigation={this.props.navigation}/>
           </View>
         )}
