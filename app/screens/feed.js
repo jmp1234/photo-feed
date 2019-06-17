@@ -54,6 +54,30 @@ class Feed extends React.Component {
     return Math.floor(seconds) + ' second' + this.pluralCheck(seconds);
   }
 
+  addToFlatList = (photo_feed, data, photo) => {
+    var that = this;
+    var photoObj = data[photo];
+    console.log('photoObj: ',photoObj);
+    console.log('users: ', database.ref('users').child(photoObj.author))
+      database.ref('users').child(photoObj.author).child('username').once('value').then((snapshot) => {
+        const exists = (snapshot.val() !== null);
+        if(exists) data = snapshot.val();
+          photo_feed.push({
+            id: photo,
+            url: photoObj.url,
+            caption: photoObj.caption,
+            posted: that.timeConverter(photoObj.posted),
+            author: data,
+            authorId: photoObj.author
+          });
+          console.log('photo feed:', photo_feed)
+          that.setState({
+            refresh: false,
+            loading: false
+          });
+      }).catch(error => console.log(error));
+  }
+
   loadFeed = () => {
     this.setState({
       refresh: true,
@@ -67,26 +91,7 @@ class Feed extends React.Component {
         var photo_feed = that.state.photo_feed;
         //for every photo in the photo object in database:
         for(let photo in data) {
-          var photoObj = data[photo];
-          console.log('photoObj: ',photoObj);
-          console.log('users: ', database.ref('users').child(photoObj.author))
-            database.ref('users').child(photoObj.author).child('username').once('value').then((snapshot) => {
-              const exists = (snapshot.val() !== null);
-              if(exists) data = snapshot.val();
-                photo_feed.push({
-                  id: photo,
-                  url: photoObj.url,
-                  caption: photoObj.caption,
-                  posted: that.timeConverter(photoObj.posted),
-                  author: data,
-                  authorId: photoObj.author
-                });
-                console.log('photo feed:', photo_feed)
-                that.setState({
-                  refresh: false,
-                  loading: false
-                });
-            }).catch(error => console.log(error));
+          that.addToFlatList(photo_feed, data, photo);
         }
     }).catch(error => console.log(error));
   }
