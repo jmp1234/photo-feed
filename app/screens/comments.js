@@ -30,6 +30,10 @@ class Comments extends React.Component {
     this.checkParams();
   }
 
+  postComment = () => {
+    //post the comment
+  }
+
   checkParams = () => {
     var params = this.props.navigation.state.params;
     console.log(this.props.navigation)
@@ -165,11 +169,15 @@ class Comments extends React.Component {
             style={{flex: 1, backgroundColor: '#eee'}}
             renderItem={({item, index}) => (
               <View key={index} style={{width: '100%', overflow: 'hidden', marginBottom: 5, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: 'grey'}}>
-                <View>
+                <View style={{padding:5, width:'100%', flexDirection:'row', justifyContent:'space-between'}}>
                   <Text>{item.posted}</Text>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('User', {userId: item.authorId})}>
                     <Text>{item.author}</Text>
                   </TouchableOpacity>
+                </View>
+                <View style={{padding: 5}}>
+                  <Text>{item.comment}</Text>
                 </View>
               </View>
             )}
@@ -177,7 +185,22 @@ class Comments extends React.Component {
         )}
         {this.state.loggedin ? (
           //are logged in
-          <Text>Comments</Text>
+          <KeyboardAvoidingView behavior="padding" enabled style={{borderBottomWidth:1, borderTopColor:'grey', padding:10, marginBottom:15}}>
+            <Text style={{fontWeight: 'bold'}}>Post Comment</Text>
+            <View>
+              <TextInput
+                editable={true}
+                placeholder={'enter your comment here...'}
+                onChangeText={(text) => this.setState({comment: text})}
+                style={{marginVertical: 10, height: 50, padding: 5, borderColor: 'grey', borderRadius: 3, backgroundColor: 'white', color: 'black'}}
+              />
+
+              <TouchableOpacity
+                onPress={() => this.postComment()}>
+                <Text>Post</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         ) : (
           //not logged in
           <View>
