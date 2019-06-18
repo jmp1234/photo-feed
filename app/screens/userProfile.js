@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from 'react
 import { f, auth, database, storage } from '../../config/config';
 import PhotoList from '../components/photoList';
 
-class Profile extends React.Component {
+class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -95,4 +95,4 @@ class Profile extends React.Component {
 
 }
 
-export default Profile;
+export default UserProfile;

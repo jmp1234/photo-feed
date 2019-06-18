@@ -143,7 +143,7 @@ class PhotoList extends React.Component {
               <View style={{padding:5}}>
                 <Text>{item.caption}</Text>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('Comments', {userId: item.id})}>
+                  onPress={() => this.props.navigation.navigate('Comments', {photoId: item.id})}>
                   <Text style={{color: 'blue',marginTop: 10, textAlign:'center'}}>View Comments...</Text>
                 </TouchableOpacity>
               </View>
