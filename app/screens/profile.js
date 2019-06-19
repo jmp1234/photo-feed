@@ -52,6 +52,22 @@ class Profile extends React.Component {
     })
   }
 
+  saveProfile = () => {
+    var name = this.state.name;
+    var username = this.state.username;
+
+    if(name !== '') {
+      database.ref('users').child(this.state.userId).child('name').set(name)
+    }
+    if(username !== '') {
+      database.ref('users').child(this.state.userId).child('username').set(username)
+    }
+
+    this.setState({
+      editingProfile: false
+    })
+  }
+
   render () {
     return (
       <View style={{flex: 1}}>
