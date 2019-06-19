@@ -16,16 +16,28 @@ class Profile extends React.Component {
     f.auth().onAuthStateChanged(user => {
       if(user) {
         //Logged In
-        that.setState({
-          loggedin: true,
-          userId: user.uid
-        })
+        that.fetchUserInfo(user.uid)
       } else {
         //Not Logged In
         that.setState({
           loggedin: false,
         })
       }
+    })
+  }
+
+  fetchUserInfo = userId => {
+    var that = this;
+    database.ref('users').child(userId).once('value').then(function(snapshot) {
+      const exists = (snapshot.val() !== null);
+      if(exists) data = snapshot.val();
+        that.setState({
+          username: data.username,
+          name: data.name,
+          avatar: data.avatar,
+          loggedin: true,
+          userId: userId
+        })
     })
   }
 
@@ -39,10 +51,10 @@ class Profile extends React.Component {
               <Text>Profile</Text>
             </View>
             <View style={{justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', paddingVertical: 10}}>
-              <Image source={{uri: 'https://api.adorable.io/avatars/285/test@user.i.png'}} style={{marginLeft: 10, width: 100, height: 100, borderRadius: 50}} />
+              <Image source={{uri: this.state.avatar}} style={{marginLeft: 10, width: 100, height: 100, borderRadius: 50}} />
               <View style={{marginRight: 10}}>
-                <Text>Name</Text>
-                <Text>@username</Text>
+                <Text>{this.state.name}</Text>
+                <Text>{this.state.username}</Text>
               </View>
             </View>
             <View style={{paddingBottom: 20, borderBottomWidth: 1}}>
