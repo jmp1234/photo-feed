@@ -1,8 +1,9 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { f, auth, database, storage } from '../../config/config';
+import PhotoList from '../components/photoList';
 
-class Profile extends React.Component {
+class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,9 +16,9 @@ class Profile extends React.Component {
   }
 
   checkParams = () => {
-    //
     var params = this.props.navigation.state.params;
-    console.log(this.props.navigation)
+    console.log('navigation: ',this.props.navigation)
+    console.log('params: ', params)
     if(params) {
       if(params.userId) {
         this.setState({
@@ -83,9 +84,8 @@ class Profile extends React.Component {
                 <Text>{this.state.username}</Text>
               </View>
             </View>
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'lightgreen'}}>
-              <Text>Loading Photos...</Text>
-            </View>
+
+            <PhotoList isUser={true} userId={this.state.userId} navigation={this.props.navigation}/>
           </View>
         )}
       </View>
@@ -95,4 +95,4 @@ class Profile extends React.Component {
 
 }
 
-export default Profile;
+export default UserProfile;
