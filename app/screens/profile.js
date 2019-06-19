@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { TextInput, FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { f, auth, database, storage } from '../../config/config';
 import PhotoList from '../components/photoList';
 
@@ -15,7 +15,7 @@ class Profile extends React.Component {
     var that = this;
     f.auth().onAuthStateChanged(user => {
       if(user) {
-        //Logged In
+        //Logged in
         that.fetchUserInfo(user.uid)
       } else {
         //Not Logged In
@@ -41,6 +41,17 @@ class Profile extends React.Component {
     })
   }
 
+  logoutUser = () => {
+    f.auth().signOut();
+    alert('logged out')
+  }
+
+  editProfile = () => {
+    this.setState({
+      editingProfile: true
+    })
+  }
+
   render () {
     return (
       <View style={{flex: 1}}>
@@ -57,19 +68,52 @@ class Profile extends React.Component {
                 <Text>{this.state.username}</Text>
               </View>
             </View>
-            <View style={{paddingBottom: 20, borderBottomWidth: 1}}>
-              <TouchableOpacity style={{marginTop: 10, marginHorizontal: 40, paddingVertical: 15, borderRadius: 20, borderColor: 'grey', borderWidth: 1.5}}>
-                <Text style={{textAlign: 'center', color: 'grey'}}>Logout</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{marginTop: 10, marginHorizontal: 40, paddingVertical: 15, borderRadius: 20, borderColor: 'grey', borderWidth: 1.5}}>
-                <Text style={{textAlign: 'center', color: 'grey'}}>Edit Profile</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Upload')}
-                style={{marginTop: 10, marginHorizontal: 40, paddingVertical: 35, borderRadius: 20, borderColor: 'grey', borderWidth: 1.5, backgroundColor: 'grey'}}>
-                <Text style={{textAlign: 'center', color: 'white'}}>Upload New +</Text>
-              </TouchableOpacity>
-            </View>
+            {this.state.editingProfile == true ? (
+              <View style={{alignItems:'center', justifyContent: 'center', paddingBottom: 20, borderBottomWidth: 1}}>
+                <TouchableOpacity onPress={() => this.setState({editingProfile: false})}>
+                  <Text style={{fontWeight: 'bold'}}>Cancel Editing</Text>
+                </TouchableOpacity>
+                <Text>Name:</Text>
+                <TextInput
+                  editable={true}
+                  placeholder={'Enter your name'}
+                  onChangeText={(text) => this.setState({name: text})}
+                  value={this.state.name}
+                  style={{width:250, marginVertical: 10, padding: 5, borderColor: 'grey', borderWidth: 1}}
+                />
+                <Text>Username:</Text>
+                <TextInput
+                  editable={true}
+                  placeholder={'Enter your username'}
+                  onChangeText={(text) => this.setState({username: text})}
+                  value={this.state.username}
+                  style={{width:250, marginVertical: 10, padding: 5, borderColor: 'grey', borderWidth: 1}}
+                />
+                <TouchableOpacity
+                style={{backgroundColor: 'blue', padding: 10}}
+                onPress={() => this.saveProfile()}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>Save Changes</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={{paddingBottom: 20, borderBottomWidth: 1}}>
+                <TouchableOpacity
+                onPress={() => this.logoutUser()}
+                style={{marginTop: 10, marginHorizontal: 40, paddingVertical: 15, borderRadius: 20, borderColor: 'grey', borderWidth: 1.5}}>
+                  <Text style={{textAlign: 'center', color: 'grey'}}>Logout</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => this.editProfile()}
+                style={{marginTop: 10, marginHorizontal: 40, paddingVertical: 15, borderRadius: 20, borderColor: 'grey', borderWidth: 1.5}}>
+                  <Text style={{textAlign: 'center', color: 'grey'}}>Edit Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('Upload')}
+                  style={{marginTop: 10, marginHorizontal: 40, paddingVertical: 35, borderRadius: 20, borderColor: 'grey', borderWidth: 1.5, backgroundColor: 'grey'}}>
+                  <Text style={{textAlign: 'center', color: 'white'}}>Upload New +</Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <PhotoList isUser={true} userId={this.state.userId} navigation={this.props.navigation}/>
           </View>
         ) : (
