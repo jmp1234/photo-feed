@@ -31,7 +31,18 @@ class UserAuth extends React.Component {
     } else {
       alert('email or password is empty')
     }
+  }
 
+  createUserObj = (userObj, email) => {
+    console.log(userObj, email, userObj.uid);
+    var uObj = {
+      name: 'Enter name',
+      username: '@name',
+      avatar: 'https://www.gravatar.com/avatar',
+      email: email
+    };
+
+    database.ref('users').child(userObj.uid).set(uObj);
   }
 
   signup = async () => {
@@ -40,7 +51,9 @@ class UserAuth extends React.Component {
     var pass = this.state.pass;
     if(email != '' && pass != '') {
       try {
-        let user = await auth.signInWithEmailAndPassword(email, pass) //('test@user.com', 'password');
+        let user = await auth.createUserWithEmailAndPassword(email, pass)
+        .then((userObj) => this.createUserObj(userObj.user, email))
+        .catch(error => alert(error))
       } catch(error) {
         console.log(error)
         alert(error)
