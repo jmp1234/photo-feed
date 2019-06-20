@@ -2,6 +2,7 @@ import React from 'react';
 import { TextInput, ActivityIndicator, TouchableOpacity, FlatList, StyleSheet, Text, View, Image } from 'react-native';
 import { f, auth, database, storage } from '../../config/config';
 import { Permissions, ImagePicker } from 'expo';
+import UserAuth from '../components/auth';
 
 class Upload extends React.Component {
   constructor(props) {
@@ -234,10 +235,7 @@ class Upload extends React.Component {
           </View>
         ) : (
           //not logged in
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>You are not logged in</Text>
-            <Text>Please login to upload a photo</Text>
-          </View>
+          <UserAuth message={'Please login to upload a photo'} />
         )}
       </View>
     )
