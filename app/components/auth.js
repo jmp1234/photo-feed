@@ -19,11 +19,36 @@ class UserAuth extends React.Component {
 
   login = async () => {
     //force user to loggedin
-    try {
-      let user = await auth.signInWithEmailAndPassword('test@user.com', 'password');
-    } catch(error) {
-      console.log(error)
+    var email = this.state.email;
+    var pass = this.state.pass;
+    if(email != '' && pass != '') {
+      try {
+        let user = await auth.signInWithEmailAndPassword(email, pass) //('test@user.com', 'password');
+      } catch(error) {
+        console.log(error)
+        alert(error)
+      }
+    } else {
+      alert('email or password is empty')
     }
+
+  }
+
+  signup = async () => {
+    //force user to loggedin
+    var email = this.state.email;
+    var pass = this.state.pass;
+    if(email != '' && pass != '') {
+      try {
+        let user = await auth.signInWithEmailAndPassword(email, pass) //('test@user.com', 'password');
+      } catch(error) {
+        console.log(error)
+        alert(error)
+      }
+    } else {
+      alert('email or password is empty')
+    }
+
   }
 
   render () {
@@ -45,10 +70,72 @@ class UserAuth extends React.Component {
           <View style={{marginVertical: 20}}>
             {this.state.authStep == 1 ? (
               //login
-              <Text>Login</Text>
+              <View>
+                <TouchableOpacity
+                  onPress={() => this.setState({authStep: 0})}
+                  style={{borderBottomWidth: 1, paddingVertical: 5, marginBottom: 10, borderBottomColor: 'black'}}>
+                  <Text style={{fontWeight: 'bold'}}>← Cancel</Text>
+                </TouchableOpacity>
+                <Text style={{fontWeight: 'bold', marginBottom: 20}}>Login</Text>
+                <Text>Email Address:</Text>
+                <TextInput
+                  editable={true}
+                  keyboardType={'email-address'}
+                  placeholder={'enter your email address..'}
+                  onChangeText={(text) => this.setState({email: text})}
+                  value={this.state.email}
+                  style={{width: 250, marginVertical: 10, padding: 5, borderWidth: 1, borderColor: 'grey', borderRadius: 3}}
+                />
+                <Text>Password:</Text>
+                <TextInput
+                  editable={true}
+                  secureTextEntry={true}
+                  placeholder={'enter your password..'}
+                  onChangeText={(text) => this.setState({pass: text})}
+                  value={this.state.pass}
+                  style={{width: 250, marginVertical: 10, padding: 5, borderWidth: 1, borderColor: 'grey', borderRadius: 3}}
+                />
+                <TouchableOpacity
+                  style={{backgroundColor: 'green', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 5}}
+                  onPress={() => this.login()}
+                  >
+                  <Text style={{color: 'white'}}>Login</Text>
+                </TouchableOpacity>
+              </View>
             ) : (
               //signup
-              <Text>Sign up</Text>
+              <View>
+                <TouchableOpacity
+                  onPress={() => this.setState({authStep: 0})}
+                  style={{borderBottomWidth: 1, paddingVertical: 5, marginBottom: 10, borderBottomColor: 'black'}}>
+                  <Text style={{fontWeight: 'bold'}}>← Cancel</Text>
+                </TouchableOpacity>
+                <Text style={{fontWeight: 'bold', marginBottom: 20}}>Sign Up</Text>
+                <Text>Email Address:</Text>
+                <TextInput
+                  editable={true}
+                  keyboardType={'email-address'}
+                  placeholder={'enter your email address..'}
+                  onChangeText={(text) => this.setState({email: text})}
+                  value={this.state.email}
+                  style={{width: 250, marginVertical: 10, padding: 5, borderWidth: 1, borderColor: 'grey', borderRadius: 3}}
+                />
+                <Text>Password:</Text>
+                <TextInput
+                  editable={true}
+                  secureTextEntry={true}
+                  placeholder={'enter your password..'}
+                  onChangeText={(text) => this.setState({pass: text})}
+                  value={this.state.pass}
+                  style={{width: 250, marginVertical: 10, padding: 5, borderWidth: 1, borderColor: 'grey', borderRadius: 3}}
+                />
+                <TouchableOpacity
+                  style={{backgroundColor: 'blue', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 5}}
+                  onPress={() => this.signup()}
+                  >
+                  <Text style={{color: 'white'}}>Sign Up</Text>
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         )}

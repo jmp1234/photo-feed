@@ -15,7 +15,6 @@ class Upload extends React.Component {
       caption: '',
       progress: 0
     }
-    alert(this.uniqueId())
   }
 
   componentDidMount() {
