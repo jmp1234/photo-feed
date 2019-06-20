@@ -14,7 +14,27 @@ class UserAuth extends React.Component {
   }
 
   componentDidMount() {
+    if(this.props.moveScreen ) {
+      this.setState({
+        moveScreen: true
+      })
+    }
+  }
 
+  showLogin = () => {
+    if(this.state.moveScreen) {
+      this.props.navigation.navigate('Upload');
+      return false
+    }
+    this.setState({authStep: 1})
+  }
+
+  showSignup = () => {
+    if(this.state.moveScreen) {
+      this.props.navigation.navigate('Upload');
+      return false
+    }
+    this.setState({authStep: 2})
   }
 
   login = async () => {
@@ -71,11 +91,11 @@ class UserAuth extends React.Component {
         <Text>{this.props.message}</Text>
         {this.state.authStep == 0 ? (
           <View style={{marginVertical: 20, flexDirection: 'row'}}>
-            <TouchableOpacity onPress={() => this.setState({authStep: 1})}>
+            <TouchableOpacity onPress={() => this.showLogin()}>
               <Text style={{fontWeight: 'bold', color: 'green'}}>Login</Text>
             </TouchableOpacity>
             <Text style={{marginHorizontal: 10}}>or</Text>
-            <TouchableOpacity onPress={() => this.setState({authStep: 2})}>
+            <TouchableOpacity onPress={() => this.showSignup()}>
               <Text style={{fontWeight: 'bold', color: 'blue'}}>Sign Up</Text>
             </TouchableOpacity>
           </View>

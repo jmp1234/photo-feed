@@ -238,7 +238,7 @@ class Comments extends React.Component {
           </KeyboardAvoidingView>
         ) : (
           //not logged in
-          <UserAuth message={'Please login to post a comment'} />
+          <UserAuth message={'Please login to post a comment'} moveScreen={true} navigation={this.props.navigation}/>
         )}
       </View>
     )
