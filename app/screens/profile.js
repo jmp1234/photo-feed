@@ -2,6 +2,7 @@ import React from 'react';
 import { TextInput, FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { f, auth, database, storage } from '../../config/config';
 import PhotoList from '../components/photoList';
+import UserAuth from '../components/auth';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -134,10 +135,7 @@ class Profile extends React.Component {
           </View>
         ) : (
           //not logged in
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{textAlign: 'center'}}>You are not logged in</Text>
-            <Text>Please login to view your profile</Text>
-          </View>
+          <UserAuth message={'Please login to view your profile'} />
         )}
       </View>
     )
