@@ -9,7 +9,8 @@ class PhotoList extends React.Component {
       photo_feed: [],
       refresh: false,
       loading: true,
-      empty: false
+      empty: false,
+      yes: false,
     }
   }
 
