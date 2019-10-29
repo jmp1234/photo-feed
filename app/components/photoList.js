@@ -7,6 +7,7 @@ class PhotoList extends React.Component {
     super(props);
     this.state = {
       photo_feed: [],
+      photos: false,
       refresh: false,
       loading: true,
       empty: false
