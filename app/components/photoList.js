@@ -11,7 +11,8 @@ class PhotoList extends React.Component {
       photos: false,
       refresh: false,
       loading: true,
-      empty: false
+      empty: false,
+      test: true
     }
   }
 
